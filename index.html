@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogri | Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --gray: #f4f4f4;
+            --accent: #ff4d00;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #fafafa; color: var(--black); line-height: 1.6; }
+
+        /* ===== LOGIN SCREEN ===== */
+        #loginScreen {
+            position: fixed; inset: 0; background: #0a0a0a;
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
+        }
+        #loginScreen.hidden { display: none; }
+        .login-box {
+            background: #1a1a1a; border: 1px solid #333; border-radius: 20px;
+            padding: 50px 40px; width: 100%; max-width: 380px; text-align: center;
+        }
+        .login-box h1 { font-family: 'Syne', sans-serif; color: white; font-size: 28px; margin-bottom: 8px; }
+        .login-box p { color: #888; font-size: 14px; margin-bottom: 32px; }
+        .login-box input {
+            width: 100%; padding: 14px 18px; border-radius: 10px; border: 1px solid #333;
+            background: #111; color: white; font-size: 16px; margin-bottom: 16px;
+            font-family: 'Inter', sans-serif; outline: none; transition: 0.2s;
+        }
+        .login-box input:focus { border-color: #555; }
+        .login-box button {
+            width: 100%; padding: 14px; border-radius: 10px; border: none;
+            background: white; color: black; font-weight: 700; font-size: 15px;
+            cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .login-box button:hover { background: #e0e0e0; }
+        .login-error { color: #ff6b6b; font-size: 13px; margin-top: 12px; display: none; }
+
+        /* ===== ADMIN PANEL ===== */
+        #adminPanel { display: none; }
+        #adminPanel.visible { display: block; }
+
+        header {
+            padding: 15px 5%; position: sticky; top: 0;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid #eee;
+        }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo img { height: 45px; vertical-align: middle; }
+        .nav-actions { display: flex; gap: 12px; align-items: center; }
+        .nav-actions a {
+            background: #f0f0f0; border: none; padding: 8px 18px; border-radius: 8px;
+            font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none;
+            color: var(--black); transition: 0.2s;
+        }
+        .nav-actions a:hover { background: #e0e0e0; }
+        .nav-actions button {
+            background: var(--black); color: white; border: none; padding: 8px 18px;
+            border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s;
+        }
+        .nav-actions button:hover { opacity: 0.8; }
+
+        main { padding: 40px 5%; }
+
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--black); padding-bottom: 15px; }
+        .admin-header h2 { font-family: 'Syne', sans-serif; font-size: 28px; }
+
+        .admin-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; }
+
+        .admin-card { background: var(--gray); padding: 30px; border-radius: 15px; }
+        .admin-card h3 { font-family: 'Syne', sans-serif; font-size: 18px; margin-bottom: 20px; }
+
+        .admin-card input, .admin-card textarea, .admin-card select {
+            width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd;
+            border-radius: 8px; font-family: inherit; font-size: 14px; outline: none;
+            transition: 0.2s; background: white;
+        }
+        .admin-card input:focus, .admin-card textarea:focus { border-color: var(--black); }
+
+        .file-drop-area {
+            display: block; padding: 30px; border: 2px dashed #bbb; border-radius: 8px;
+            text-align: center; cursor: pointer; margin-bottom: 15px; background: white; transition: 0.3s;
+        }
+        .file-drop-area:hover { border-color: var(--black); background: #fafafa; }
+
+        .tallas-grid { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .tallas-grid label { font-size: 14px; cursor: pointer; }
+
+        .inventory-list { max-height: 600px; overflow-y: auto; }
+        .inventory-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background: white; padding: 15px; margin-bottom: 12px; border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .inventory-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+        .inventory-item .info { flex-grow: 1; margin-left: 15px; }
+        .inventory-item .info h4 { font-size: 14px; margin-bottom: 2px; }
+
+        .btn-primary {
+            background: var(--black); color: white; padding: 14px 30px; border: none;
+            border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%;
+            transition: 0.3s; font-size: 14px;
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-cancel { margin-top: 10px; background: none; border: none; cursor: pointer; color: #666; width: 100%; font-size: 13px; }
+        .edit-btn, .delete-btn {
+            border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer;
+            font-size: 14px; transition: 0.2s; margin-left: 6px;
+        }
+        .edit-btn { background: #f0f0f0; }
+        .edit-btn:hover { background: #ddd; }
+        .delete-btn { background: #ffe0e0; }
+        .delete-btn:hover { background: #ffc0c0; }
+
+        #stockFieldsContainer { display: none; margin-top: 15px; border-top: 2px solid #ddd; padding-top: 15px; }
+        #stockFieldsContainer h4 { margin-bottom: 10px; font-size: 14px; }
+
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--black); color: white; padding: 12px 30px; border-radius: 50px; z-index: 5000; transition: 0.4s; font-size: 14px; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 768px) {
+            .admin-grid { grid-template-columns: 1fr; }
+            main { padding: 20px 4%; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== PANTALLA DE LOGIN ===== -->
+<div id="loginScreen">
+    <div class="login-box">
+        <h1>JOGRI</h1>
+        <p>Panel de administración</p>
+        <input type="text" id="loginUser" placeholder="Usuario" autocomplete="off">
+        <input type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter') doLogin()">
+        <button onclick="doLogin()">INGRESAR</button>
+        <p class="login-error" id="loginError">❌ Credenciales incorrectas</p>
+    </div>
+</div>
+
+<!-- ===== PANEL ADMIN ===== -->
+<div id="adminPanel">
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="Logo.jpeg" alt="Jogri" onerror="this.src='https://via.placeholder.com/150?text=Logo'">
+            </div>
+            <div class="nav-actions">
+                <a href="index.html" target="_blank">🛍️ Ver tienda</a>
+                <button onclick="logout()">Cerrar sesión</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="admin-header">
+            <h2>PANEL DE CONTROL</h2>
+            <span style="font-size:13px; color:#888;">Jogri Admin</span>
+        </div>
+
+        <div class="admin-grid">
+            <!-- FORMULARIO -->
+            <div class="admin-card">
+                <h3 id="formTitle">Agregar Polo</h3>
+                <input type="hidden" id="editPoloId">
+
+                <label for="imgFileInput" class="file-drop-area" id="fileLabel">
+                    📷 Seleccionar Imagen
+                </label>
+                <input type="file" id="imgFileInput" accept="image/*" hidden onchange="updateLabel()">
+
+                <input type="text" id="prodName" placeholder="Nombre (Ej: Polo Oversize)">
+                <input type="number" id="prodPrice" placeholder="Precio (Ej: 45.00)" step="0.01">
+                <input type="number" id="prodStock" placeholder="Stock total" value="0">
+
+                <select id="prodCategoria">
+                    <option value="Básico">Básico</option>
+                    <option value="Premium">Premium</option>
+                    <option value="Edición Limitada">Edición Limitada</option>
+                    <option value="Deportivo">Deportivo</option>
+                </select>
+
+                <textarea id="prodDesc" placeholder="Descripción detallada..." rows="3"></textarea>
+
+                <label style="font-weight:600; margin-top:5px; display:block; font-size:13px;">Colores (separados por coma)</label>
+                <input type="text" id="prodColores" placeholder="Ej: Rojo, Azul, Negro">
+
+                <label style="font-weight:600; margin-top:5px; display:block; font-size:13px;">Tallas disponibles</label>
+                <div class="tallas-grid">
+                    <label><input type="checkbox" class="talla-check" value="XS"> XS</label>
+                    <label><input type="checkbox" class="talla-check" value="S"> S</label>
+                    <label><input type="checkbox" class="talla-check" value="M"> M</label>
+                    <label><input type="checkbox" class="talla-check" value="L"> L</label>
+                    <label><input type="checkbox" class="talla-check" value="XL"> XL</label>
+                    <label><input type="checkbox" class="talla-check" value="XXL"> XXL</label>
+                </div>
+
+                <div id="stockFieldsContainer">
+                    <h4>Stock por Talla y Color</h4>
+                    <div id="stockFields"></div>
+                </div>
+
+                <button class="btn-primary" id="saveBtn" onclick="saveProduct()">GUARDAR PRODUCTO</button>
+                <button id="cancelEdit" class="btn-cancel" onclick="resetForm()" style="display:none;">Cancelar edición</button>
+            </div>
+
+            <!-- INVENTARIO -->
+            <div class="admin-card">
+                <h3>Inventario Actual</h3>
+                <div id="adminInventoryList" class="inventory-list"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ===== CONFIGURACIÓN =====
+const SUPABASE_URL = 'https://nbcxafnjolasdmleqjhp.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_0CmPrpHpz_iz8ZOI04uZ4A_VcNCpncN';
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ===== CREDENCIALES DE ADMIN =====
+// Cambia estos valores por los tuyos
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'jogri2024';
+
+// ===== LOGIN =====
+function doLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        sessionStorage.setItem('jogri_admin', 'true');
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminPanel').classList.add('visible');
+        loadInventory();
+    } else {
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('loginPass').value = '';
+        setTimeout(() => document.getElementById('loginError').style.display = 'none', 3000);
+    }
+}
+
+function logout() {
+    sessionStorage.removeItem('jogri_admin');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('adminPanel').classList.remove('visible');
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+}
+
+// Al cargar, verificar si ya está autenticado
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('jogri_admin') === 'true') {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminPanel').classList.add('visible');
+        loadInventory();
+    }
+    document.querySelectorAll('.talla-check').forEach(cb => cb.addEventListener('change', generateStockFields));
+    document.getElementById('prodColores')?.addEventListener('input', generateStockFields);
+});
+
+// ===== HELPERS =====
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.innerText = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ===== INVENTARIO =====
+async function loadInventory() {
+    const list = document.getElementById('adminInventoryList');
+    if (!list) return;
+    list.innerHTML = '<p style="color:#888; font-size:13px;">Cargando...</p>';
+
+    const { data: polos, error } = await _supabase.from('polos').select('*').order('id', { ascending: false });
+    if (error) { showToast("❌ Error: " + error.message); return; }
+
+    list.innerHTML = '';
+    if (!polos || polos.length === 0) { list.innerHTML = '<p>No hay productos registrados.</p>'; return; }
+
+    polos.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'inventory-item';
+        item.innerHTML = `
+            <img src="${p.imagen_url || 'https://via.placeholder.com/50'}" onerror="this.src='https://via.placeholder.com/50'" alt="${escapeHtml(p.nombre)}">
+            <div class="info">
+                <h4>${escapeHtml(p.nombre)}</h4>
+                <small>S/ ${parseFloat(p.precio).toFixed(2)} · ${escapeHtml(p.categoria || '')}</small><br>
+                <small style="color:${(p.stock||0)>0?'green':'red'};">📦 Stock: ${p.stock||0}</small>
+            </div>
+            <div>
+                <button class="edit-btn" data-id="${p.id}" data-polo='${encodeURIComponent(JSON.stringify(p))}'>✏️</button>
+                <button class="delete-btn" data-id="${p.id}">🗑️</button>
+            </div>`;
+        item.querySelector('.edit-btn').addEventListener('click', (e) => {
+            prepareEdit(JSON.parse(decodeURIComponent(e.currentTarget.dataset.polo)));
+        });
+        item.querySelector('.delete-btn').addEventListener('click', () => deletePolo(p.id));
+        list.appendChild(item);
+    });
+}
+
+// ===== STOCK FIELDS =====
+function generateStockFields() {
+    const tallas = [...document.querySelectorAll('.talla-check:checked')].map(cb => cb.value);
+    const coloresRaw = document.getElementById('prodColores').value.trim();
+    const colores = coloresRaw ? coloresRaw.split(',').map(c => c.trim()).filter(c => c) : [];
+    const container = document.getElementById('stockFieldsContainer');
+    const stockDiv = document.getElementById('stockFields');
+    if (!container || !stockDiv) return;
+
+    if (tallas.length > 0 && colores.length > 0) {
+        container.style.display = 'block';
+        let html = '<table style="width:100%; border-collapse:collapse; font-size:13px;">';
+        html += '<tr><th style="padding:8px; background:#0a0a0a; color:white; border-radius:4px;">Color / Talla</th>';
+        tallas.forEach(t => html += `<th style="padding:8px; background:#0a0a0a; color:white;">${t}</th>`);
+        html += '</tr>';
+        colores.forEach(color => {
+            html += `<tr><td style="background:#f0f0f0; padding:8px;"><strong>${color}</strong></td>`;
+            tallas.forEach(talla => {
+                const fieldId = `stock_${talla}_${color.replace(/\s/g,'_')}`;
+                html += `<td style="padding:5px;"><input type="number" id="${fieldId}" value="0" min="0" style="width:70px; padding:5px; text-align:center; border:1px solid #ddd; border-radius:4px;"></td>`;
+            });
+            html += '</tr>';
+        });
+        html += '</table>';
+        stockDiv.innerHTML = html;
+    } else {
+        container.style.display = 'none';
+        stockDiv.innerHTML = '';
+    }
+}
+
+async function loadExistingStocks(poloId) {
+    const { data: stocks } = await _supabase.from('polo_stock').select('*').eq('polo_id', poloId);
+    if (stocks) {
+        stocks.forEach(s => {
+            const fieldId = `stock_${s.talla}_${s.color.replace(/\s/g,'_')}`;
+            const field = document.getElementById(fieldId);
+            if (field) field.value = s.cantidad;
+        });
+    }
+}
+
+// ===== CRUD =====
+async function saveProduct() {
+    const id = document.getElementById('editPoloId').value;
+    const nombre = document.getElementById('prodName').value.trim();
+    const precio = document.getElementById('prodPrice').value;
+    const descripcion = document.getElementById('prodDesc').value.trim();
+    const categoria = document.getElementById('prodCategoria').value;
+    const file = document.getElementById('imgFileInput').files[0];
+
+    const tallasChecked = [...document.querySelectorAll('.talla-check:checked')].map(cb => cb.value);
+    const coloresRaw = document.getElementById('prodColores').value.trim();
+    const colores = coloresRaw ? coloresRaw.split(',').map(c => c.trim()).filter(c => c) : [];
+
+    if (!nombre || !precio) { showToast("⚠️ Llena nombre y precio"); return; }
+    if (tallasChecked.length === 0) { showToast("⚠️ Selecciona al menos una talla"); return; }
+    if (colores.length === 0) { showToast("⚠️ Ingresa al menos un color"); return; }
+
+    const btn = document.getElementById('saveBtn');
+    btn.innerText = "PROCESANDO...";
+    btn.disabled = true;
+
+    const variantes = [];
+    tallasChecked.forEach(talla => {
+        colores.forEach(color => {
+            const fieldId = `stock_${talla}_${color.replace(/\s/g,'_')}`;
+            const field = document.getElementById(fieldId);
+            const cantidad = field ? parseInt(field.value) || 0 : 0;
+            variantes.push({ talla, color, cantidad });
+        });
+    });
+    const stockTotal = variantes.reduce((sum, v) => sum + v.cantidad, 0);
+
+    const updateData = { nombre, precio: parseFloat(precio), descripcion, categoria, stock: stockTotal, tallas: tallasChecked, colores };
+
+    if (file) {
+        const fileName = `polo_${Date.now()}.png`;
+        const { error: uploadError } = await _supabase.storage.from('imagenes-polos').upload(fileName, file, { upsert: true });
+        if (uploadError) { showToast("❌ Error al subir imagen: " + uploadError.message); btn.innerText = "GUARDAR PRODUCTO"; btn.disabled = false; return; }
+        const { data: urlData } = _supabase.storage.from('imagenes-polos').getPublicUrl(fileName);
+        updateData.imagen_url = urlData.publicUrl;
+    }
+
+    let poloId = id;
+    let error;
+    if (id) {
+        ({ error } = await _supabase.from('polos').update(updateData).eq('id', id));
+    } else {
+        const res = await _supabase.from('polos').insert([updateData]).select();
+        error = res.error;
+        if (!error && res.data?.length) poloId = res.data[0].id;
+    }
+
+    if (error) { showToast("❌ Error al guardar: " + error.message); btn.innerText = "GUARDAR PRODUCTO"; btn.disabled = false; return; }
+
+    if (poloId) {
+        await _supabase.from('polo_stock').delete().eq('polo_id', poloId);
+        const inserts = variantes.map(v => ({ polo_id: poloId, talla: v.talla, color: v.color, cantidad: v.cantidad }));
+        await _supabase.from('polo_stock').insert(inserts);
+    }
+
+    showToast("✅ Producto guardado correctamente");
+    resetForm();
+    btn.innerText = "GUARDAR PRODUCTO";
+    btn.disabled = false;
+    await loadInventory();
+}
+
+async function deletePolo(id) {
+    if (!confirm("¿Eliminar este producto permanentemente?")) return;
+    const { error } = await _supabase.from('polos').delete().eq('id', id);
+    if (error) { showToast("❌ Error al eliminar: " + error.message); }
+    else { showToast("🗑️ Producto eliminado"); await loadInventory(); }
+}
+
+function prepareEdit(polo) {
+    document.getElementById('formTitle').innerText = "Editando Polo";
+    document.getElementById('editPoloId').value = polo.id;
+    document.getElementById('prodName').value = polo.nombre || '';
+    document.getElementById('prodPrice').value = polo.precio || '';
+    document.getElementById('prodDesc').value = polo.descripcion || '';
+    document.getElementById('prodCategoria').value = polo.categoria || 'Básico';
+    document.getElementById('prodStock').value = polo.stock || 0;
+    document.getElementById('prodColores').value = (polo.colores || []).join(', ');
+    document.getElementById('fileLabel').innerHTML = "📷 Cambiar imagen (opcional)";
+    document.getElementById('cancelEdit').style.display = 'block';
+    document.querySelectorAll('.talla-check').forEach(cb => { cb.checked = (polo.tallas || []).includes(cb.value); });
+    setTimeout(() => { generateStockFields(); loadExistingStocks(polo.id); }, 100);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetForm() {
+    document.getElementById('formTitle').innerText = "Agregar Polo";
+    document.getElementById('editPoloId').value = "";
+    document.getElementById('prodName').value = "";
+    document.getElementById('prodPrice').value = "";
+    document.getElementById('prodDesc').value = "";
+    document.getElementById('prodCategoria').value = "Básico";
+    document.getElementById('prodStock').value = "0";
+    document.getElementById('prodColores').value = "";
+    document.getElementById('imgFileInput').value = "";
+    document.getElementById('fileLabel').innerHTML = "📷 Seleccionar Imagen";
+    document.getElementById('cancelEdit').style.display = 'none';
+    document.querySelectorAll('.talla-check').forEach(cb => cb.checked = false);
+    document.getElementById('stockFieldsContainer').style.display = 'none';
+    document.getElementById('stockFields').innerHTML = '';
+}
+
+function updateLabel() {
+    const file = document.getElementById('imgFileInput').files[0];
+    document.getElementById('fileLabel').innerHTML = file ? `📷 ${file.name}` : "📷 Seleccionar Imagen";
+}
+</script>
+</body>
+</html>
