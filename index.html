@@ -11,11 +11,12 @@
             --black: #0a0a0a;
             --white: #ffffff;
             --gray: #f4f4f4;
+            --accent: #ff4d00;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: #fafafa; color: var(--black); line-height: 1.6; }
 
-        /* ===== LOGIN ===== */
+        /* ===== LOGIN SCREEN ===== */
         #loginScreen {
             position: fixed; inset: 0; background: #0a0a0a;
             display: flex; align-items: center; justify-content: center; z-index: 9999;
@@ -41,7 +42,7 @@
         .login-box button:hover { background: #e0e0e0; }
         .login-error { color: #ff6b6b; font-size: 13px; margin-top: 12px; display: none; }
 
-        /* ===== PANEL ===== */
+        /* ===== ADMIN PANEL ===== */
         #adminPanel { display: none; }
         #adminPanel.visible { display: block; }
 
@@ -54,8 +55,9 @@
         .logo img { height: 45px; vertical-align: middle; }
         .nav-actions { display: flex; gap: 12px; align-items: center; }
         .nav-actions a {
-            background: #f0f0f0; padding: 8px 18px; border-radius: 8px;
-            font-weight: 600; font-size: 13px; text-decoration: none; color: var(--black); transition: 0.2s;
+            background: #f0f0f0; border: none; padding: 8px 18px; border-radius: 8px;
+            font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none;
+            color: var(--black); transition: 0.2s;
         }
         .nav-actions a:hover { background: #e0e0e0; }
         .nav-actions button {
@@ -65,39 +67,30 @@
         .nav-actions button:hover { opacity: 0.8; }
 
         main { padding: 40px 5%; }
-        .admin-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; border-bottom: 2px solid var(--black); padding-bottom: 15px;
-        }
+
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--black); padding-bottom: 15px; }
         .admin-header h2 { font-family: 'Syne', sans-serif; font-size: 28px; }
+
         .admin-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; }
+
         .admin-card { background: var(--gray); padding: 30px; border-radius: 15px; }
         .admin-card h3 { font-family: 'Syne', sans-serif; font-size: 18px; margin-bottom: 20px; }
+
         .admin-card input, .admin-card textarea, .admin-card select {
             width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd;
             border-radius: 8px; font-family: inherit; font-size: 14px; outline: none;
             transition: 0.2s; background: white;
         }
         .admin-card input:focus, .admin-card textarea:focus { border-color: var(--black); }
+
         .file-drop-area {
             display: block; padding: 30px; border: 2px dashed #bbb; border-radius: 8px;
             text-align: center; cursor: pointer; margin-bottom: 15px; background: white; transition: 0.3s;
         }
         .file-drop-area:hover { border-color: var(--black); background: #fafafa; }
-        .label-field { font-weight: 600; margin-top: 5px; display: block; font-size: 13px; margin-bottom: 6px; }
+
         .tallas-grid { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
         .tallas-grid label { font-size: 14px; cursor: pointer; }
-
-        /* ===== BOTÓN IA ===== */
-        .btn-ia {
-            width: 100%; padding: 11px; margin-bottom: 15px;
-            background: linear-gradient(135deg, #4285f4 0%, #0f9d58 100%);
-            color: white; border: none; border-radius: 8px; font-weight: 600;
-            cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif;
-            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .btn-ia:hover { opacity: 0.9; transform: scale(0.99); }
-        .btn-ia:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
         .inventory-list { max-height: 600px; overflow-y: auto; }
         .inventory-item {
@@ -112,30 +105,23 @@
         .btn-primary {
             background: var(--black); color: white; padding: 14px 30px; border: none;
             border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%;
-            transition: 0.3s; font-size: 14px; font-family: 'Inter', sans-serif;
+            transition: 0.3s; font-size: 14px;
         }
         .btn-primary:hover { opacity: 0.9; }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-cancel {
-            margin-top: 10px; background: none; border: none; cursor: pointer;
-            color: #666; width: 100%; font-size: 13px; font-family: 'Inter', sans-serif;
-        }
+        .btn-cancel { margin-top: 10px; background: none; border: none; cursor: pointer; color: #666; width: 100%; font-size: 13px; }
         .edit-btn, .delete-btn {
-            border: none; border-radius: 6px; padding: 6px 10px;
-            cursor: pointer; font-size: 14px; transition: 0.2s; margin-left: 6px;
+            border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer;
+            font-size: 14px; transition: 0.2s; margin-left: 6px;
         }
-        .edit-btn { background: #f0f0f0; } .edit-btn:hover { background: #ddd; }
-        .delete-btn { background: #ffe0e0; } .delete-btn:hover { background: #ffc0c0; }
+        .edit-btn { background: #f0f0f0; }
+        .edit-btn:hover { background: #ddd; }
+        .delete-btn { background: #ffe0e0; }
+        .delete-btn:hover { background: #ffc0c0; }
 
         #stockFieldsContainer { display: none; margin-top: 15px; border-top: 2px solid #ddd; padding-top: 15px; }
         #stockFieldsContainer h4 { margin-bottom: 10px; font-size: 14px; }
 
-        .toast {
-            position: fixed; bottom: 20px; left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--black); color: white; padding: 12px 30px;
-            border-radius: 50px; z-index: 5000; transition: 0.4s; font-size: 14px;
-        }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--black); color: white; padding: 12px 30px; border-radius: 50px; z-index: 5000; transition: 0.4s; font-size: 14px; }
         .toast.show { transform: translateX(-50%) translateY(0); }
 
         @media (max-width: 768px) {
@@ -146,26 +132,24 @@
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ===== PANTALLA DE LOGIN ===== -->
 <div id="loginScreen">
     <div class="login-box">
         <h1>JOGRI</h1>
         <p>Panel de administración</p>
         <input type="text" id="loginUser" placeholder="Usuario" autocomplete="off">
-        <input type="password" id="loginPass" placeholder="Contraseña"
-               onkeydown="if(event.key==='Enter') doLogin()">
+        <input type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter') doLogin()">
         <button onclick="doLogin()">INGRESAR</button>
         <p class="login-error" id="loginError">❌ Credenciales incorrectas</p>
     </div>
 </div>
 
-<!-- PANEL ADMIN -->
+<!-- ===== PANEL ADMIN ===== -->
 <div id="adminPanel">
     <header>
         <nav>
             <div class="logo">
-                <img src="Logo.jpeg" alt="Jogri"
-                     onerror="this.src='https://via.placeholder.com/150?text=Logo'">
+                <img src="Logo.jpeg" alt="Jogri" onerror="this.src='https://via.placeholder.com/150?text=Logo'">
             </div>
             <div class="nav-actions">
                 <a href="index.html" target="_blank">🛍️ Ver tienda</a>
@@ -181,7 +165,6 @@
         </div>
 
         <div class="admin-grid">
-
             <!-- FORMULARIO -->
             <div class="admin-card">
                 <h3 id="formTitle">Agregar Polo</h3>
@@ -203,10 +186,12 @@
                     <option value="Deportivo">Deportivo</option>
                 </select>
 
-                <label class="label-field">Colores (separados por coma)</label>
+                <textarea id="prodDesc" placeholder="Descripción detallada..." rows="3"></textarea>
+
+                <label style="font-weight:600; margin-top:5px; display:block; font-size:13px;">Colores (separados por coma)</label>
                 <input type="text" id="prodColores" placeholder="Ej: Rojo, Azul, Negro">
 
-                <label class="label-field">Tallas disponibles</label>
+                <label style="font-weight:600; margin-top:5px; display:block; font-size:13px;">Tallas disponibles</label>
                 <div class="tallas-grid">
                     <label><input type="checkbox" class="talla-check" value="XS"> XS</label>
                     <label><input type="checkbox" class="talla-check" value="S"> S</label>
@@ -221,14 +206,6 @@
                     <div id="stockFields"></div>
                 </div>
 
-                <label class="label-field" style="margin-top:10px;">Descripción</label>
-                <textarea id="prodDesc" placeholder="Escribe una descripción o usa la IA..." rows="3"></textarea>
-
-                <!-- BOTÓN IA GEMINI -->
-                <button type="button" class="btn-ia" id="btnIA" onclick="generarDescripcion()">
-                    ✨ Generar descripción con IA
-                </button>
-
                 <button class="btn-primary" id="saveBtn" onclick="saveProduct()">GUARDAR PRODUCTO</button>
                 <button id="cancelEdit" class="btn-cancel" onclick="resetForm()" style="display:none;">Cancelar edición</button>
             </div>
@@ -238,7 +215,6 @@
                 <h3>Inventario Actual</h3>
                 <div id="adminInventoryList" class="inventory-list"></div>
             </div>
-
         </div>
     </main>
 </div>
@@ -246,17 +222,15 @@
 <div id="toast" class="toast"></div>
 
 <script>
-// =============================================
-//   ⬇️  SOLO CAMBIA ESTOS 3 VALORES  ⬇️
-// =============================================
-const ADMIN_USER = 'admin';         // Tu usuario
-const ADMIN_PASS = 'jogri2024';     // Tu contraseña
-const GEMINI_KEY = 'AIzaSyB1SZW2QrkX33rKC_0MLt4qcBrjdYygaGI';     // Pega aquí tu key de aistudio.google.com
-// =============================================
-
+// ===== CONFIGURACIÓN =====
 const SUPABASE_URL = 'https://nbcxafnjolasdmleqjhp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_0CmPrpHpz_iz8ZOI04uZ4A_VcNCpncN';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ===== CREDENCIALES DE ADMIN =====
+// Cambia estos valores por los tuyos
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'jogri2024';
 
 // ===== LOGIN =====
 function doLogin() {
@@ -282,12 +256,21 @@ function logout() {
     document.getElementById('loginPass').value = '';
 }
 
+// Al cargar, verificar si ya está autenticado
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('jogri_admin') === 'true') {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminPanel').classList.add('visible');
+        loadInventory();
+    }
+    document.querySelectorAll('.talla-check').forEach(cb => cb.addEventListener('change', generateStockFields));
+    document.getElementById('prodColores')?.addEventListener('input', generateStockFields);
+});
+
 // ===== HELPERS =====
 function escapeHtml(str) {
     if (!str) return '';
-    return String(str)
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
 function showToast(msg) {
     const toast = document.getElementById('toast');
@@ -296,83 +279,30 @@ function showToast(msg) {
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// ===== IA - GENERAR DESCRIPCIÓN =====
-async function generarDescripcion() {
-    const nombre    = document.getElementById('prodName').value.trim();
-    const colores   = document.getElementById('prodColores').value.trim();
-    const categoria = document.getElementById('prodCategoria').value;
-
-    if (!nombre) { showToast("⚠️ Primero escribe el nombre del polo"); return; }
-
-    const btn = document.getElementById('btnIA');
-    btn.innerText = "⏳ Generando...";
-    btn.disabled = true;
-
-    try {
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `Escribe una descripción corta y atractiva (máximo 2 oraciones) para una tienda de ropa peruana.
-Producto: ${nombre}.
-Categoría: ${categoria}.
-Colores disponibles: ${colores || 'variados'}.
-Usa un tono moderno y juvenil. Devuelve SOLO la descripción, sin comillas ni explicaciones.`
-                        }]
-                    }]
-                })
-            }
-        );
-
-        const data = await response.json();
-        const descripcion = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-
-        if (descripcion) {
-            document.getElementById('prodDesc').value = descripcion;
-            showToast("✅ Descripción generada");
-        } else {
-            showToast("❌ No se pudo generar, intenta de nuevo");
-        }
-    } catch (err) {
-        showToast("❌ Error de conexión con Gemini");
-    }
-
-    btn.innerHTML = "✨ Generar descripción con IA";
-    btn.disabled = false;
-}
-
 // ===== INVENTARIO =====
 async function loadInventory() {
     const list = document.getElementById('adminInventoryList');
     if (!list) return;
-    list.innerHTML = '<p style="color:#888; font-size:13px; padding:10px;">Cargando...</p>';
+    list.innerHTML = '<p style="color:#888; font-size:13px;">Cargando...</p>';
 
     const { data: polos, error } = await _supabase.from('polos').select('*').order('id', { ascending: false });
     if (error) { showToast("❌ Error: " + error.message); return; }
 
     list.innerHTML = '';
-    if (!polos || polos.length === 0) {
-        list.innerHTML = '<p style="color:#888;">No hay productos registrados.</p>';
-        return;
-    }
+    if (!polos || polos.length === 0) { list.innerHTML = '<p>No hay productos registrados.</p>'; return; }
 
     polos.forEach(p => {
         const item = document.createElement('div');
         item.className = 'inventory-item';
         item.innerHTML = `
-            <img src="${p.imagen_url || 'https://via.placeholder.com/50'}"
-                 onerror="this.src='https://via.placeholder.com/50'" alt="${escapeHtml(p.nombre)}">
+            <img src="${p.imagen_url || 'https://via.placeholder.com/50'}" onerror="this.src='https://via.placeholder.com/50'" alt="${escapeHtml(p.nombre)}">
             <div class="info">
                 <h4>${escapeHtml(p.nombre)}</h4>
                 <small>S/ ${parseFloat(p.precio).toFixed(2)} · ${escapeHtml(p.categoria || '')}</small><br>
                 <small style="color:${(p.stock||0)>0?'green':'red'};">📦 Stock: ${p.stock||0}</small>
             </div>
             <div>
-                <button class="edit-btn" data-polo='${encodeURIComponent(JSON.stringify(p))}'>✏️</button>
+                <button class="edit-btn" data-id="${p.id}" data-polo='${encodeURIComponent(JSON.stringify(p))}'>✏️</button>
                 <button class="delete-btn" data-id="${p.id}">🗑️</button>
             </div>`;
         item.querySelector('.edit-btn').addEventListener('click', (e) => {
@@ -383,29 +313,26 @@ async function loadInventory() {
     });
 }
 
-// ===== STOCK VARIANTES =====
+// ===== STOCK FIELDS =====
 function generateStockFields() {
     const tallas = [...document.querySelectorAll('.talla-check:checked')].map(cb => cb.value);
     const coloresRaw = document.getElementById('prodColores').value.trim();
     const colores = coloresRaw ? coloresRaw.split(',').map(c => c.trim()).filter(c => c) : [];
     const container = document.getElementById('stockFieldsContainer');
-    const stockDiv  = document.getElementById('stockFields');
+    const stockDiv = document.getElementById('stockFields');
     if (!container || !stockDiv) return;
 
     if (tallas.length > 0 && colores.length > 0) {
         container.style.display = 'block';
         let html = '<table style="width:100%; border-collapse:collapse; font-size:13px;">';
-        html += '<tr><th style="padding:8px; background:#0a0a0a; color:white;">Color / Talla</th>';
+        html += '<tr><th style="padding:8px; background:#0a0a0a; color:white; border-radius:4px;">Color / Talla</th>';
         tallas.forEach(t => html += `<th style="padding:8px; background:#0a0a0a; color:white;">${t}</th>`);
         html += '</tr>';
         colores.forEach(color => {
             html += `<tr><td style="background:#f0f0f0; padding:8px;"><strong>${color}</strong></td>`;
             tallas.forEach(talla => {
                 const fieldId = `stock_${talla}_${color.replace(/\s/g,'_')}`;
-                html += `<td style="padding:5px;">
-                    <input type="number" id="${fieldId}" value="0" min="0"
-                           style="width:70px; padding:5px; text-align:center; border:1px solid #ddd; border-radius:4px;">
-                </td>`;
+                html += `<td style="padding:5px;"><input type="number" id="${fieldId}" value="0" min="0" style="width:70px; padding:5px; text-align:center; border:1px solid #ddd; border-radius:4px;"></td>`;
             });
             html += '</tr>';
         });
@@ -430,20 +357,20 @@ async function loadExistingStocks(poloId) {
 
 // ===== CRUD =====
 async function saveProduct() {
-    const id          = document.getElementById('editPoloId').value;
-    const nombre      = document.getElementById('prodName').value.trim();
-    const precio      = document.getElementById('prodPrice').value;
+    const id = document.getElementById('editPoloId').value;
+    const nombre = document.getElementById('prodName').value.trim();
+    const precio = document.getElementById('prodPrice').value;
     const descripcion = document.getElementById('prodDesc').value.trim();
-    const categoria   = document.getElementById('prodCategoria').value;
-    const file        = document.getElementById('imgFileInput').files[0];
+    const categoria = document.getElementById('prodCategoria').value;
+    const file = document.getElementById('imgFileInput').files[0];
 
     const tallasChecked = [...document.querySelectorAll('.talla-check:checked')].map(cb => cb.value);
-    const coloresRaw    = document.getElementById('prodColores').value.trim();
-    const colores       = coloresRaw ? coloresRaw.split(',').map(c => c.trim()).filter(c => c) : [];
+    const coloresRaw = document.getElementById('prodColores').value.trim();
+    const colores = coloresRaw ? coloresRaw.split(',').map(c => c.trim()).filter(c => c) : [];
 
-    if (!nombre || !precio)         { showToast("⚠️ Llena nombre y precio"); return; }
+    if (!nombre || !precio) { showToast("⚠️ Llena nombre y precio"); return; }
     if (tallasChecked.length === 0) { showToast("⚠️ Selecciona al menos una talla"); return; }
-    if (colores.length === 0)       { showToast("⚠️ Ingresa al menos un color"); return; }
+    if (colores.length === 0) { showToast("⚠️ Ingresa al menos un color"); return; }
 
     const btn = document.getElementById('saveBtn');
     btn.innerText = "PROCESANDO...";
@@ -452,32 +379,26 @@ async function saveProduct() {
     const variantes = [];
     tallasChecked.forEach(talla => {
         colores.forEach(color => {
-            const fieldId  = `stock_${talla}_${color.replace(/\s/g,'_')}`;
-            const field    = document.getElementById(fieldId);
+            const fieldId = `stock_${talla}_${color.replace(/\s/g,'_')}`;
+            const field = document.getElementById(fieldId);
             const cantidad = field ? parseInt(field.value) || 0 : 0;
             variantes.push({ talla, color, cantidad });
         });
     });
     const stockTotal = variantes.reduce((sum, v) => sum + v.cantidad, 0);
 
-    const updateData = {
-        nombre, precio: parseFloat(precio), descripcion,
-        categoria, stock: stockTotal, tallas: tallasChecked, colores
-    };
+    const updateData = { nombre, precio: parseFloat(precio), descripcion, categoria, stock: stockTotal, tallas: tallasChecked, colores };
 
     if (file) {
         const fileName = `polo_${Date.now()}.png`;
-        const { error: uploadError } = await _supabase.storage
-            .from('imagenes-polos').upload(fileName, file, { upsert: true });
-        if (uploadError) {
-            showToast("❌ Error imagen: " + uploadError.message);
-            btn.innerText = "GUARDAR PRODUCTO"; btn.disabled = false; return;
-        }
+        const { error: uploadError } = await _supabase.storage.from('imagenes-polos').upload(fileName, file, { upsert: true });
+        if (uploadError) { showToast("❌ Error al subir imagen: " + uploadError.message); btn.innerText = "GUARDAR PRODUCTO"; btn.disabled = false; return; }
         const { data: urlData } = _supabase.storage.from('imagenes-polos').getPublicUrl(fileName);
         updateData.imagen_url = urlData.publicUrl;
     }
 
-    let poloId = id, error;
+    let poloId = id;
+    let error;
     if (id) {
         ({ error } = await _supabase.from('polos').update(updateData).eq('id', id));
     } else {
@@ -486,19 +407,15 @@ async function saveProduct() {
         if (!error && res.data?.length) poloId = res.data[0].id;
     }
 
-    if (error) {
-        showToast("❌ Error: " + error.message);
-        btn.innerText = "GUARDAR PRODUCTO"; btn.disabled = false; return;
-    }
+    if (error) { showToast("❌ Error al guardar: " + error.message); btn.innerText = "GUARDAR PRODUCTO"; btn.disabled = false; return; }
 
     if (poloId) {
         await _supabase.from('polo_stock').delete().eq('polo_id', poloId);
-        await _supabase.from('polo_stock').insert(
-            variantes.map(v => ({ polo_id: poloId, talla: v.talla, color: v.color, cantidad: v.cantidad }))
-        );
+        const inserts = variantes.map(v => ({ polo_id: poloId, talla: v.talla, color: v.color, cantidad: v.cantidad }));
+        await _supabase.from('polo_stock').insert(inserts);
     }
 
-    showToast("✅ Producto guardado");
+    showToast("✅ Producto guardado correctamente");
     resetForm();
     btn.innerText = "GUARDAR PRODUCTO";
     btn.disabled = false;
@@ -508,39 +425,37 @@ async function saveProduct() {
 async function deletePolo(id) {
     if (!confirm("¿Eliminar este producto permanentemente?")) return;
     const { error } = await _supabase.from('polos').delete().eq('id', id);
-    if (error) { showToast("❌ Error: " + error.message); }
-    else        { showToast("🗑️ Producto eliminado"); await loadInventory(); }
+    if (error) { showToast("❌ Error al eliminar: " + error.message); }
+    else { showToast("🗑️ Producto eliminado"); await loadInventory(); }
 }
 
 function prepareEdit(polo) {
-    document.getElementById('formTitle').innerText  = "Editando Polo";
-    document.getElementById('editPoloId').value     = polo.id;
-    document.getElementById('prodName').value       = polo.nombre      || '';
-    document.getElementById('prodPrice').value      = polo.precio      || '';
-    document.getElementById('prodDesc').value       = polo.descripcion || '';
-    document.getElementById('prodCategoria').value  = polo.categoria   || 'Básico';
-    document.getElementById('prodStock').value      = polo.stock       || 0;
-    document.getElementById('prodColores').value    = (polo.colores || []).join(', ');
-    document.getElementById('fileLabel').innerHTML  = "📷 Cambiar imagen (opcional)";
+    document.getElementById('formTitle').innerText = "Editando Polo";
+    document.getElementById('editPoloId').value = polo.id;
+    document.getElementById('prodName').value = polo.nombre || '';
+    document.getElementById('prodPrice').value = polo.precio || '';
+    document.getElementById('prodDesc').value = polo.descripcion || '';
+    document.getElementById('prodCategoria').value = polo.categoria || 'Básico';
+    document.getElementById('prodStock').value = polo.stock || 0;
+    document.getElementById('prodColores').value = (polo.colores || []).join(', ');
+    document.getElementById('fileLabel').innerHTML = "📷 Cambiar imagen (opcional)";
     document.getElementById('cancelEdit').style.display = 'block';
-    document.querySelectorAll('.talla-check').forEach(cb => {
-        cb.checked = (polo.tallas || []).includes(cb.value);
-    });
+    document.querySelectorAll('.talla-check').forEach(cb => { cb.checked = (polo.tallas || []).includes(cb.value); });
     setTimeout(() => { generateStockFields(); loadExistingStocks(polo.id); }, 100);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function resetForm() {
-    document.getElementById('formTitle').innerText  = "Agregar Polo";
-    document.getElementById('editPoloId').value     = "";
-    document.getElementById('prodName').value       = "";
-    document.getElementById('prodPrice').value      = "";
-    document.getElementById('prodDesc').value       = "";
-    document.getElementById('prodCategoria').value  = "Básico";
-    document.getElementById('prodStock').value      = "0";
-    document.getElementById('prodColores').value    = "";
-    document.getElementById('imgFileInput').value   = "";
-    document.getElementById('fileLabel').innerHTML  = "📷 Seleccionar Imagen";
+    document.getElementById('formTitle').innerText = "Agregar Polo";
+    document.getElementById('editPoloId').value = "";
+    document.getElementById('prodName').value = "";
+    document.getElementById('prodPrice').value = "";
+    document.getElementById('prodDesc').value = "";
+    document.getElementById('prodCategoria').value = "Básico";
+    document.getElementById('prodStock').value = "0";
+    document.getElementById('prodColores').value = "";
+    document.getElementById('imgFileInput').value = "";
+    document.getElementById('fileLabel').innerHTML = "📷 Seleccionar Imagen";
     document.getElementById('cancelEdit').style.display = 'none';
     document.querySelectorAll('.talla-check').forEach(cb => cb.checked = false);
     document.getElementById('stockFieldsContainer').style.display = 'none';
@@ -551,17 +466,6 @@ function updateLabel() {
     const file = document.getElementById('imgFileInput').files[0];
     document.getElementById('fileLabel').innerHTML = file ? `📷 ${file.name}` : "📷 Seleccionar Imagen";
 }
-
-// ===== INIT =====
-document.addEventListener('DOMContentLoaded', () => {
-    if (sessionStorage.getItem('jogri_admin') === 'true') {
-        document.getElementById('loginScreen').classList.add('hidden');
-        document.getElementById('adminPanel').classList.add('visible');
-        loadInventory();
-    }
-    document.querySelectorAll('.talla-check').forEach(cb => cb.addEventListener('change', generateStockFields));
-    document.getElementById('prodColores')?.addEventListener('input', generateStockFields);
-});
 </script>
 </body>
 </html>
